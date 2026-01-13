@@ -33,38 +33,24 @@ namespace MiniProject.Services
         public async Task<List<Patient>> GetPatientsWithoutFollowUpAsync()
         {
             var today = DateTime.Now;
-            
-            // Method 1: LINQ with subquery
-            /*
-            return await _context.Patients
-                .Where(p => !p.Appointments.Any(a => a.AppointmentDate > today))
-                .ToListAsync();
-            */
-            
-            // Method 2: Left Join logic (more "LINQ-y" for demonstration)
-            // But EF Core handles navigation properties best.
-            // Requirement says "Where, Select, GroupBy, Join, OrderBy"
-            // Let's use a Join or GroupJoin approach?
-            // "Patients who have no future appointments"
-            
+
             var query = from p in _context.Patients
                         join a in _context.Appointments.Where(x => x.AppointmentDate > today)
                         on p.Id equals a.PatientId into futureApps
                         from subApp in futureApps.DefaultIfEmpty()
                         where subApp == null // No future appointment
                         select p;
-            
-            // Distinct in case validation needs it, though Patient join null should be unique if logic is correct
+
             return await query.Distinct().ToListAsync();
         }
 
         // Report 3: Doctor Productivity (GroupBy, Select, OrderBy)
         public async Task<List<DoctorAppointmentStats>> GetDoctorAppointmentStatsAsync()
         {
-            // Group by DoctorName
             return await _context.Appointments
-                .Where(a => a.DoctorName != null)
-                .GroupBy(a => a.DoctorName)
+                .Include(a => a.Doctor)
+                .Where(a => a.Doctor != null)
+                .GroupBy(a => a.Doctor!.FullName)
                 .Select(g => new DoctorAppointmentStats
                 {
                     DoctorName = g.Key ?? "Unknown",

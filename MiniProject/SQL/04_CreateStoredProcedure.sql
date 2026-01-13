@@ -7,14 +7,15 @@ CREATE OR ALTER PROCEDURE [Healthcare].[sp_CreateAppointment]
     @PatientId INT,
     @AppointmentDate DATETIME2,
     @Reason NVARCHAR(255),
-    @DoctorName NVARCHAR(100),
+    @DoctorId INT = NULL,
+    @Status NVARCHAR(50) = 'Scheduled',
     @NewId INT OUTPUT
 AS
 BEGIN
     SET NOCOUNT ON;
 
-    INSERT INTO [Healthcare].[Appointment] (PatientId, AppointmentDate, Reason, Status, DoctorName)
-    VALUES (@PatientId, @AppointmentDate, @Reason, 'Scheduled', @DoctorName);
+    INSERT INTO [Healthcare].[Appointment] (PatientId, AppointmentDate, Reason, Status, DoctorId)
+    VALUES (@PatientId, @AppointmentDate, @Reason, @Status, @DoctorId);
 
     SET @NewId = SCOPE_IDENTITY();
 END

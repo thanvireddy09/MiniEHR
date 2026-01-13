@@ -23,7 +23,10 @@ namespace MiniProject.Services
 
         public async Task<Patient?> GetByIdAsync(int id)
         {
-            return await _context.Patients.FindAsync(id);
+            // Include appointments so callers can inspect dependent rows
+            return await _context.Patients
+                .Include(p => p.Appointments)
+                .FirstOrDefaultAsync(p => p.Id == id);
         }
 
         public async Task InitialCreateAsync(Patient patient)
@@ -41,12 +44,24 @@ namespace MiniProject.Services
 
         public async Task DeleteAsync(int id)
         {
-            var patient = await _context.Patients.FindAsync(id);
-            if (patient != null)
+            var patient = await _context.Patients
+                .Include(p => p.Appointments)
+                .FirstOrDefaultAsync(p => p.Id == id);
+
+            if (patient == null)
             {
-                _context.Patients.Remove(patient);
-                await _context.SaveChangesAsync();
+                return;
             }
+
+            // Prevent deletion if there are related appointments
+            if (patient.Appointments != null && patient.Appointments.Count > 0)
+            {
+                throw new InvalidOperationException(
+                    "Cannot delete patient because there are existing appointments. Delete or reassign appointments before deleting the patient.");
+            }
+
+            _context.Patients.Remove(patient);
+            await _context.SaveChangesAsync();
         }
     }
 }

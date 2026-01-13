@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using MiniProject.Models;
 using MiniProject.Services;
+using System;
 using System.Threading.Tasks;
 
 namespace MiniProject.Pages.Patients
@@ -15,7 +16,7 @@ namespace MiniProject.Pages.Patients
             _service = service;
         }
 
-        [BindProperty]
+        // ? DO NOT bind Patient on POST
         public Patient Patient { get; set; } = default!;
 
         public async Task<IActionResult> OnGetAsync(int? id)
@@ -31,20 +32,31 @@ namespace MiniProject.Pages.Patients
             {
                 return NotFound();
             }
+
             Patient = patient;
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync(int? id)
+        public async Task<IActionResult> OnPostAsync(int id)
         {
-            if (id == null)
+            try
             {
-                return NotFound();
+                await _service.DeleteAsync(id);
+                return RedirectToPage("./Index");
             }
+            catch (InvalidOperationException ex)
+            {
+                ModelState.AddModelError(string.Empty, ex.Message);
 
-            await _service.DeleteAsync(id.Value);
+                var patient = await _service.GetByIdAsync(id);
+                if (patient == null)
+                {
+                    return NotFound();
+                }
 
-            return RedirectToPage("./Index");
+                Patient = patient;
+                return Page();
+            }
         }
     }
 }
