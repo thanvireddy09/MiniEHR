@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using MiniProject.Models;
 using MiniProject.Services;
+using System;
 using System.Threading.Tasks;
 
 namespace MiniProject.Pages.Appointments
@@ -33,9 +34,22 @@ namespace MiniProject.Pages.Appointments
         {
             if (id == null) return NotFound();
 
-            await _service.DeleteAsync(id.Value);
+            try
+            {
+                await _service.DeleteAsync(id.Value);
+                return RedirectToPage("./Index");
+            }
+            catch (InvalidOperationException ex)
+            {
+                // Friendly error for dependent lab orders — redisplay confirmation with message
+                ModelState.AddModelError(string.Empty, ex.Message);
 
-            return RedirectToPage("./Index");
+                var appt = await _service.GetByIdAsync(id.Value);
+                if (appt == null) return NotFound();
+
+                Appointment = appt;
+                return Page();
+            }
         }
     }
 }

@@ -11,17 +11,20 @@ namespace MiniProject.Pages.Appointments
     {
         private readonly IAppointmentService _apptService;
         private readonly IPatientService _patientService;
+        private readonly IDoctorService _doctorService;
 
-        public EditModel(IAppointmentService apptService, IPatientService patientService)
+        public EditModel(IAppointmentService apptService, IPatientService patientService, IDoctorService doctorService)
         {
             _apptService = apptService;
             _patientService = patientService;
+            _doctorService = doctorService;
         }
 
         [BindProperty]
         public Appointment Appointment { get; set; } = default!;
 
         public SelectList PatientList { get; set; } = default!;
+        public SelectList DoctorList { get; set; } = default!;
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -34,6 +37,9 @@ namespace MiniProject.Pages.Appointments
             var patients = await _patientService.GetAllAsync();
             PatientList = new SelectList(patients, "Id", "Name");
 
+            var doctors = await _doctorService.GetAllAsync();
+            DoctorList = new SelectList(doctors, "Id", "FullName");
+
             return Page();
         }
 
@@ -43,6 +49,9 @@ namespace MiniProject.Pages.Appointments
             {
                 var patients = await _patientService.GetAllAsync();
                 PatientList = new SelectList(patients, "Id", "Name");
+
+                var doctors = await _doctorService.GetAllAsync();
+                DoctorList = new SelectList(doctors, "Id", "FullName");
                 return Page();
             }
 

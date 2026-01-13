@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -27,8 +27,13 @@ namespace MiniProject.Models
         [StringLength(50)]
         public string Status { get; set; } = "Scheduled";
 
-        [StringLength(100)]
-        public string? DoctorName { get; set; }
+        // New: optional foreign key to Doctor
+        public int? DoctorId { get; set; }
+
+        [ForeignKey("DoctorId")]
+        public Doctor? Doctor { get; set; }
+
+
 
         // Navigation Property
         public ICollection<LabOrder> LabOrders { get; set; } = new List<LabOrder>();
