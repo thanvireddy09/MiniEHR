@@ -50,6 +50,14 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTGFiT3JkZXJzXENyZWF0ZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Thanvi/MiniProject/MiniProject/MiniProject/Pages/LabOrders/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTGFiT3JkZXJzXERlbGV0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Thanvi/MiniProject/MiniProject/MiniProject/Pages/LabOrders/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTGFiT3JkZXJzXEVkaXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Thanvi/MiniProject/MiniProject/MiniProject/Pages/LabOrders/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTGFiT3JkZXJzXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
