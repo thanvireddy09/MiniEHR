@@ -1,0 +1,45 @@
+@page "{id:int}"
+@model MiniProject.Pages.LabOrders.EditModel
+
+<h2>Edit Lab Order</h2>
+
+<div class="row">
+    <div class="col-md-6">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <input asp-for="LabOrder.Id" type="hidden" />
+            <input asp-for="LabOrder.AppointmentId" type="hidden" />
+
+            <div class="form-group mb-3">
+                <label asp-for="LabOrder.TestName" class="control-label"></label>
+                <input asp-for="LabOrder.TestName" class="form-control" />
+                <span asp-validation-for="LabOrder.TestName" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="LabOrder.Status" class="control-label"></label>
+                <select asp-for="LabOrder.Status" class="form-control">
+                    <option value="Pending">Pending</option>
+                    <option value="Completed">Completed</option>
+                </select>
+                <span asp-validation-for="LabOrder.Status" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="LabOrder.Result" class="control-label"></label>
+                <textarea asp-for="LabOrder.Result" class="form-control"></textarea>
+                <span asp-validation-for="LabOrder.Result" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+                <a asp-page="./Index" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
